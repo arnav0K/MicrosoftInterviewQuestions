@@ -1,0 +1,22 @@
+int Solution::repeatedNumber(const vector<int> &A) {
+     int slow = A[0];
+    int fast = A[0];
+
+    // Step 2: Move pointers to detect cycle
+    do {
+        slow = A[slow];
+        fast = A[A[fast]];
+    } while (slow != fast);
+
+    // Step 3: Reset one pointer to the first element
+    slow = A[0];
+
+    // Step 4: Move both pointers until they meet again
+    while (slow != fast) {
+        slow = A[slow];
+        fast = A[fast];
+    }
+
+    // Return the duplicate element
+    return slow;
+}
