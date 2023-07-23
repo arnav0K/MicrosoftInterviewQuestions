@@ -1,0 +1,53 @@
+
+int maxHistogramArea(vector<int>& heights) {
+    stack<int> st;
+    int maxArea = 0, i = 0;
+    while (i < heights.size()) {
+        if (st.empty() || heights[i] >= heights[st.top()]) {
+            st.push(i++);
+        } else {
+            int tp = st.top();
+            st.pop();
+            int width = st.empty() ? i : i - st.top() - 1;
+            maxArea = max(maxArea, heights[tp] * width);
+        }
+    }
+    while (!st.empty()) {
+        int tp = st.top();
+        st.pop();
+        int width = st.empty() ? i : i - st.top() - 1;
+        maxArea = max(maxArea, heights[tp] * width);
+    }
+    return maxArea;
+}
+
+int Solution::maximalRectangle(vector<vector<int>>& A) {
+    if (A.empty() || A[0].empty()) return 0;
+    int rows = A.size();
+    int cols = A[0].size();
+    vector<vector<int>> dp(rows, vector<int>(cols, 0));
+    
+    // Initialize the first row of dp to be the same as the first row of matrix A
+    for (int j = 0; j < cols; ++j) {
+        dp[0][j] = A[0][j];
+    }
+    
+    // Compute dp[i][j]
+    for (int i = 1; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            if (A[i][j] == 1) {
+                dp[i][j] = dp[i - 1][j] + 1;
+            } else {
+                dp[i][j] = 0;
+            }
+        }
+    }
+    
+    int maxArea = 0;
+    // Calculate the maximum area for each row and update maxArea
+    for (int i = 0; i < rows; ++i) {
+        maxArea = max(maxArea, maxHistogramArea(dp[i]));
+    }
+    
+    return maxArea;
+}
